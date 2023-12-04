@@ -67,4 +67,5 @@ tests:
       - hspec
     # - hspec-megaparsec
       - hspec-discover
+      - transformers
       - QuickCheck

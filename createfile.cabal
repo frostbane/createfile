@@ -82,4 +82,5 @@ test-suite createfile-test
     , hspec-discover
     , mtl
     , text
+    , transformers
   default-language: Haskell2010
