@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Fb.Arguments
+      Fb.Exit
       Lib
   other-modules:
       Paths_createfile

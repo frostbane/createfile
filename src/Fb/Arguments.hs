@@ -1,9 +1,8 @@
 {-# OPTIONS -Wall -Wno-unused-matches #-}
 
-
 module Fb.Arguments
     ( getWorkingDir,
-      getProgram,
+      getProgramName,
       getArguments,
     )
   where
@@ -29,8 +28,8 @@ getWorkingDir = do
     cwd <- getCurrentDirectory
     return $ T.pack cwd
 
-getProgram :: IO (Text)
-getProgram = do
+getProgramName :: IO (Text)
+getProgramName = do
     name <- getProgName
     return $ T.pack name
 
