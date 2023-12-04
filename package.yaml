@@ -1,10 +1,10 @@
 name:                createfile
 version:             0.1.0.0
-github:              "githubuser/createfile"
+github:              "frostbane/createfile"
 license:             BSD-3-Clause
-author:              "Author name here"
-maintainer:          "example@example.com"
-copyright:           "2023 Author name here"
+author:              "frostbane"
+maintainer:          "frostbane@programmer.net"
+copyright:           "2023 frostbane name here"
 
 extra-source-files:
 - README.md
@@ -23,6 +23,7 @@ dependencies:
   - base >= 4.7 && < 5
   - directory >= 1.3.7.1
   - text >= 2.0.2
+  - filepath >= 1.4.1
 
 ghc-options:
 - -Wall

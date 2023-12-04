@@ -23,10 +23,10 @@ main = do
 
 checkArgs :: [Text] ->  IO ()
 checkArgs args = do
-    pathExists <- (checkPathExists . head) args
+    existingPath <- (pathExists . head) args
     return ()
-    if | not $ checkArgumentCount args -> exit (-1) "[ERROR]. 2 or more arguments are required."
-       | not pathExists -> exit (-2) "[ERROR] Output path does not exist."
+    if | not $ argumentCountIsEnough args -> exit (-1) "[ERROR]. 2 or more arguments are required."
+       | not existingPath -> exit (-2) "[ERROR] Output path does not exist."
        | otherwise -> return ()
 
 exit :: Int -> String -> IO ()

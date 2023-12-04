@@ -7,11 +7,11 @@ cabal-version: 2.2
 name:           createfile
 version:        0.1.0.0
 description:    Please see the README on GitHub at <https://github.com/githubuser/createfile#readme>
-homepage:       https://github.com/githubuser/createfile#readme
-bug-reports:    https://github.com/githubuser/createfile/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2023 Author name here
+homepage:       https://github.com/frostbane/createfile#readme
+bug-reports:    https://github.com/frostbane/createfile/issues
+author:         frostbane
+maintainer:     frostbane@programmer.net
+copyright:      2023 frostbane name here
 license:        BSD-3-Clause
 license-file:   LICENSE
 build-type:     Simple
@@ -21,7 +21,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/createfile
+  location: https://github.com/frostbane/createfile
 
 library
   exposed-modules:
@@ -38,6 +38,7 @@ library
   build-depends:
       base >=4.7 && <5
     , directory >=1.3.7.1
+    , filepath >=1.4.1
     , text >=2.0.2
   default-language: Haskell2010
 
@@ -54,6 +55,7 @@ executable createfile-exe
       base >=4.7 && <5
     , createfile
     , directory >=1.3.7.1
+    , filepath >=1.4.1
     , text >=2.0.2
   default-language: Haskell2010
 
@@ -71,5 +73,6 @@ test-suite createfile-test
       base >=4.7 && <5
     , createfile
     , directory >=1.3.7.1
+    , filepath >=1.4.1
     , text >=2.0.2
   default-language: Haskell2010
