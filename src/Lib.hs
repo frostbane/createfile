@@ -27,7 +27,8 @@ fileExists = doesFileExist . T.unpack
 hasPermission :: Text -> IO Bool
 hasPermission filename = do
     perms <- getPermissions file
-    return $ readable perms
+    let hasPerms = readable perms && writable perms
+    return hasPerms
   where
     (_, file) = (splitFileName . T.unpack) filename
 

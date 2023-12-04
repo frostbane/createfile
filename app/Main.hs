@@ -1,7 +1,6 @@
 {-# LANGUAGE MultiWayIf #-}
 {-# OPTIONS_GHC
       -Wno-name-shadowing
-      -Wno-unused-imports
 #-}
 
 module Main
@@ -23,10 +22,15 @@ main = do
 
 checkArgs :: [Text] ->  IO ()
 checkArgs args = do
-    existingPath <- (pathExists . head) args
+    let filename = head args
+        enoughArgs = argumentCountIsEnough args
+    existingPath <- pathExists filename
+    existingFile <- fileExists filename
+    hasPerms <- hasPermission filename
     return ()
-    if | not $ argumentCountIsEnough args -> exit (-1) "[ERROR]. 2 or more arguments are required."
-       | not existingPath -> exit (-2) "[ERROR] Output path does not exist."
+    if | not enoughArgs                 -> exit (-1) "[ERROR] Two or more arguments are required."
+       | not existingPath               -> exit (-2) "[ERROR] Output path does not exist."
+       | not (existingFile && hasPerms) -> exit (-3) "[ERROR] Unable to read/write output file."
        | otherwise -> return ()
 
 exit :: Int -> String -> IO ()

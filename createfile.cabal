@@ -34,12 +34,13 @@ library
       Paths_createfile
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-unused-imports -O2
   build-depends:
       base >=4.7 && <5
-    , directory >=1.3.7.1
-    , filepath >=1.4.1
-    , text >=2.0.2
+    , directory
+    , filepath
+    , mtl
+    , text
   default-language: Haskell2010
 
 executable createfile-exe
@@ -50,13 +51,14 @@ executable createfile-exe
       Paths_createfile
   hs-source-dirs:
       app
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-unused-imports -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , createfile
-    , directory >=1.3.7.1
-    , filepath >=1.4.1
-    , text >=2.0.2
+    , directory
+    , filepath
+    , mtl
+    , text
   default-language: Haskell2010
 
 test-suite createfile-test
@@ -68,11 +70,15 @@ test-suite createfile-test
       Paths_createfile
   hs-source-dirs:
       test
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-unused-imports -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      QuickCheck
+    , base >=4.7 && <5
     , createfile
-    , directory >=1.3.7.1
-    , filepath >=1.4.1
-    , text >=2.0.2
+    , directory
+    , filepath
+    , hspec
+    , hspec-discover
+    , mtl
+    , text
   default-language: Haskell2010
