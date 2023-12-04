@@ -18,7 +18,9 @@ validationSpec :: Spec
 validationSpec = do
   it "info" $ do
     pwd <- (return . show) =<< getCurrentDirectory
-    putStrLn $ "\t" ++ pwd
+    tmpDir <- (return . show) =<< getTemporaryDirectory
+    putStrLn $ "\tworking directory: " ++ pwd
+    putStrLn $ "\ttemporary directory: " ++ tmpDir
 
   describe "program argument validation" $ do
     context "argument count" $ do
@@ -40,11 +42,32 @@ validationSpec = do
         xxxExists <- doesPathExist xxx
         xxxExists `shouldBe` False
 
-        xxxPathExists <- L.pathExists (T.pack xxx)
+        xxxPathExists <- (L.pathExists . T.pack) xxx
         xxxPathExists `shouldBe` False
 
       it "missing file (create output file) should be allowed" $ do
-        pendingWith "not yet implemeted"
+        tmpDir <- getTemporaryDirectory
+        let yyy = tmpDir </> "yyy.txt"
+
+        do
+            e <- doesFileExist yyy
+            if e then
+               removeFile yyy
+            else
+                return ()
+
+        yyyExists <- doesFileExist yyy
+        yyyExists `shouldBe` False
+
+        yyyFileExists <- (L.fileExists . T.pack) yyy
+        yyyFileExists `shouldBe` False
+
+        writeFile yyy "some content"
+
+        newYYYFileExists <- (L.fileExists . T.pack) yyy
+        newYYYFileExists `shouldBe` True
+
+        removeFile yyy
 
       it "existing output file should be readable and writable" $ do
         pendingWith "not yet implemeted"
