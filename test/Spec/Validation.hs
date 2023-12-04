@@ -5,29 +5,47 @@ module Spec.Validation
     ) where
 
 import Test.Hspec
+import qualified Data.Text as T
 import System.IO
 import System.Directory
+import System.FilePath.Posix
 import Control.Monad.IO.Class
 import Control.Monad.Trans.Identity
 
-import Lib
+import qualified Lib as L
 
 validationSpec :: Spec
 validationSpec = do
   it "info" $ do
     pwd <- (return . show) =<< getCurrentDirectory
     putStrLn $ "\t" ++ pwd
+
   describe "program argument validation" $ do
     context "argument count" $ do
       it "should have 2 or more arguments" $ do
-        argumentCountIsEnough ["a"] `shouldBe` False
-        argumentCountIsEnough ["a", "b"] `shouldBe` True
-        argumentCountIsEnough ["a", "b", "c"] `shouldBe` True
+        L.argumentCountIsEnough ["a"] `shouldBe` False
+        L.argumentCountIsEnough ["a", "b"] `shouldBe` True
+        L.argumentCountIsEnough ["a", "b", "c"] `shouldBe` True
+
     context "target output file" $ do
       it "output folder should exist" $ do
-        pendingWith "not yet implemeted"
+        homeDir <- getHomeDirectory
+        homeExists <- doesPathExist homeDir
+        homeExists `shouldBe` True
+
+        pathExists <- L.pathExists (T.pack homeDir)
+        pathExists `shouldBe` True
+
+        let xxx = homeDir </> "xxxx" </> "file.txt"
+        xxxExists <- doesPathExist xxx
+        xxxExists `shouldBe` False
+
+        xxxPathExists <- L.pathExists (T.pack xxx)
+        xxxPathExists `shouldBe` False
+
       it "missing file (create output file) should be allowed" $ do
         pendingWith "not yet implemeted"
+
       it "existing output file should be readable and writable" $ do
         pendingWith "not yet implemeted"
 
