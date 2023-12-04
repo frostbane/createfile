@@ -1,2 +1,10 @@
+import Test.Hspec
+
+import Spec.Validation as Run
+
 main :: IO ()
-main = putStrLn "Test suite not yet implemented"
+main = do
+    putStrLn "CreateFile Test"
+    hspec $ do
+        Run.validationSpec
+

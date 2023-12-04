@@ -65,6 +65,7 @@ test-suite createfile-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Spec.Validation
       Paths_createfile
   autogen-modules:
       Paths_createfile
