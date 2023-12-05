@@ -1,21 +1,29 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE MultiWayIf #-}
 
 module Spec.Validation
     ( validationSpec
     ) where
 
 import Test.Hspec
+import Test.QuickCheck
 import qualified Data.Text as T
 import System.IO
+import System.Random
 import System.Directory
 import System.FilePath.Posix
 import Control.Monad.IO.Class
+import Control.Exception (bracket)
 import Control.Monad.Trans.Identity
 
 import qualified Lib as L
 
 validationSpec :: Spec
 validationSpec = do
+  testArguments
+  testFileExist
+
+testArguments = do
   it "info" $ do
     pwd <- (return . show) =<< getCurrentDirectory
     tmpDir <- (return . show) =<< getTemporaryDirectory
@@ -29,6 +37,11 @@ validationSpec = do
         L.argumentCountIsEnough ["a", "b"] `shouldBe` True
         L.argumentCountIsEnough ["a", "b", "c"] `shouldBe` True
 
+      it "existing output file should be readable and writable" $ do
+        pendingWith "not yet implemeted"
+
+testFileExist = do
+  describe "program argument validation" $ do
     context "target output file" $ do
       it "output folder should exist" $ do
         homeDir <- getHomeDirectory
@@ -45,30 +58,46 @@ validationSpec = do
         xxxPathExists <- (L.pathExists . T.pack) xxx
         xxxPathExists `shouldBe` False
 
-      it "missing file (create output file) should be allowed" $ do
-        tmpDir <- getTemporaryDirectory
-        let yyy = tmpDir </> "yyy.txt"
+      around withNoTempYYY $ do
+        it "missing file (create output file) should be allowed" $ do
+          tmpDir <- getTemporaryDirectory
+          let yyy = tmpDir </> "yyy.txt"
+          (\x -> x `shouldBe` False) =<< doesFileExist yyy
+          (\x -> x `shouldBe` False) =<< (L.fileExists . T.pack) yyy
 
-        do
-            e <- doesFileExist yyy
-            if e then
-               removeFile yyy
-            else
-                return ()
+          writeFile yyy "some content"
 
-        yyyExists <- doesFileExist yyy
-        yyyExists `shouldBe` False
+          (\x -> x `shouldBe` True) =<< (L.fileExists . T.pack) yyy
+          (L.fileExists . T.pack) yyy `ioShouldBe` False
 
-        yyyFileExists <- (L.fileExists . T.pack) yyy
-        yyyFileExists `shouldBe` False
 
-        writeFile yyy "some content"
+ioShouldBe :: (Show a, Eq a) => IO (a) -> a -> Expectation
+ioShouldBe a q = do
+    ioresult <- a
+    ioresult `shouldBe` q
 
-        newYYYFileExists <- (L.fileExists . T.pack) yyy
-        newYYYFileExists `shouldBe` True
+-- iobe :: (Show a, Eq a) => IO (a) -> a -> IO Property
+-- iobe a q = do
+--     ioresult <- a
+--     if | ioresult == q -> return $ property True
+--        | otherwise     -> return $ property False
 
-        removeFile yyy
+withNoTempYYY action =
+    bracket
+        removeTempYYY
+        action
+        (\_ -> removeTempYYY)
 
-      it "existing output file should be readable and writable" $ do
-        pendingWith "not yet implemeted"
+-- removeTempYYY :: ActionWith () -> IO ()
+removeTempYYY = do
+  tmpDir <- getTemporaryDirectory
+  let yyy = tmpDir </> "yyy.txt"
+  r <- randomIO :: IO Int
+  putStrLn $ "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " <> (show r)
 
+  do
+    e <- doesFileExist yyy
+    if e then
+       removeFile yyy
+    else
+        return ()

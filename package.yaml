@@ -62,9 +62,11 @@ tests:
       - -threaded
       - -rtsopts
       - -with-rtsopts=-N
+      - -Wno-missing-signatures
     dependencies:
       - createfile
       - hspec
+      - random
     # - hspec-megaparsec
       - hspec-discover
       - transformers

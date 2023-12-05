@@ -71,7 +71,7 @@ test-suite createfile-test
       Paths_createfile
   hs-source-dirs:
       test
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-unused-imports -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-unused-imports -threaded -rtsopts -with-rtsopts=-N -Wno-missing-signatures
   build-depends:
       QuickCheck
     , base >=4.7 && <5
@@ -81,6 +81,7 @@ test-suite createfile-test
     , hspec
     , hspec-discover
     , mtl
+    , random
     , text
     , transformers
   default-language: Haskell2010
