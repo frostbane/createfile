@@ -1,4 +1,6 @@
-{-# LANGUAGE MultiWayIf #-}
+{-# LANGUAGE MultiWayIf
+           , OverloadedStrings
+#-}
 {-# OPTIONS_GHC
       -Wno-name-shadowing
 #-}
@@ -9,7 +11,7 @@ module Main
 
 import Data.Text (Text)
 import qualified Data.Text as T
-import System.IO
+import System.IO hiding (createFile)
 
 import Fb.Arguments
 import Fb.Exit
@@ -19,25 +21,41 @@ main :: IO ()
 main = do
     args <- getArguments
     checkArgs args
+    let contents = (createContents . tail) args
+    createFile (head args) contents
 
 checkArgs :: [Text] ->  IO ()
 checkArgs args = do
     let filename = head args
         enoughArgs = argumentCountIsEnough args
     existingPath <- pathExists filename
-    existingFile <- fileExists filename
-    hasPerms <- hasPermission filename
+    hasPerms <- checkPerms filename
     return ()
-    if | not enoughArgs                 -> exit (-1) "[ERROR] Two or more arguments are required."
-       | not existingPath               -> exit (-2) "[ERROR] Output path does not exist."
-       | not (existingFile && hasPerms) -> exit (-3) "[ERROR] Unable to read/write output file."
-       | otherwise -> return ()
+    if | not enoughArgs   -> exit (-1) "[ERROR] Two or more arguments are required."
+       | not existingPath -> exit (-2) "[ERROR] Output path does not exist."
+       | not hasPerms     -> exit (-3) "[ERROR] Unable to read/write output file."
+       | otherwise        -> return ()
+  where
+
+checkPerms filename = do
+    existingFile <- fileExists filename
+    if existingFile then do
+        hasPerms <- hasPermission filename
+        return hasPerms
+    else
+        return True
 
 exit :: Int -> String -> IO ()
 exit code msg = do
     prog <- (return . T.unpack) =<< getProgramName
     exitWith code << putStrLn $ prog ++ " " ++ msg
 
+createContents :: [Text] -> Text
+createContents = T.intercalate "\n"
+
+createFile :: Text -> Text -> IO ()
+createFile filename contents = do
+    writeFile (T.unpack filename) (T.unpack contents)
 
 infixr 0 <<
 (<<) :: (Monad m) => m a -> m b -> m a
