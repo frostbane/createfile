@@ -41,6 +41,7 @@ testArguments = do
 
       it "existing output file should be readable and writable" $ do
         pendingWith "not yet implemeted"
+        nop
 
 testFileExist = do
   describe "program argument validation" $ do
@@ -64,33 +65,35 @@ testFileExist = do
         it "missing file (create output file) should be allowed" $ do
           tmpDir <- getTemporaryDirectory
           let yyy = tmpDir </> tempfilename
-          (\x -> x `shouldBe` False) =<< doesFileExist yyy
-          (\x -> x `shouldBe` False) =<< (L.fileExists . T.pack) yyy
+
+          doesFileExist yyy `shouldReturn` False
+          (L.fileExists . T.pack) yyy `shouldReturn` False
 
           writeFile yyy "some content"
 
           (L.fileExists . T.pack) yyy >>= (`shouldBe` True)
           (L.fileExists . T.pack) yyy `shouldReturn` True
+          nop
 
 nop :: Expectation
 nop = True `shouldBe` True
 
 withNoTempYYY action =
     bracket
-        removeTempYYY
+        removeTemp
         action
-        (\_ -> removeTempYYY)
+        (\_ -> removeTemp)
+  where
+    removeTemp :: IO ()
+    removeTemp = do
+        tmpDir <- getTemporaryDirectory
+        let yyy = tmpDir </> tempfilename
+        -- r <- randomIO :: IO Int
+        -- putStrLn $ "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " <> (show r)
 
-removeTempYYY :: IO ()
-removeTempYYY = do
-  tmpDir <- getTemporaryDirectory
-  let yyy = tmpDir </> tempfilename
-  -- r <- randomIO :: IO Int
-  -- putStrLn $ "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " <> (show r)
-
-  do
-    e <- doesFileExist yyy
-    if e then
-       removeFile yyy
-    else
-        return ()
+        do
+            e <- doesFileExist yyy
+            if e then
+                removeFile yyy
+            else
+                return ()
