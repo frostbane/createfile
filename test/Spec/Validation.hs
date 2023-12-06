@@ -18,6 +18,8 @@ import Control.Monad.Trans.Identity
 
 import qualified Lib as L
 
+tempfilename = "@create-file-yyy.txt"
+
 validationSpec :: Spec
 validationSpec = do
   testArguments
@@ -61,26 +63,17 @@ testFileExist = do
       around withNoTempYYY $ do
         it "missing file (create output file) should be allowed" $ do
           tmpDir <- getTemporaryDirectory
-          let yyy = tmpDir </> "yyy.txt"
+          let yyy = tmpDir </> tempfilename
           (\x -> x `shouldBe` False) =<< doesFileExist yyy
           (\x -> x `shouldBe` False) =<< (L.fileExists . T.pack) yyy
 
           writeFile yyy "some content"
 
-          (\x -> x `shouldBe` True) =<< (L.fileExists . T.pack) yyy
-          (L.fileExists . T.pack) yyy `ioShouldBe` False
+          (L.fileExists . T.pack) yyy >>= (`shouldBe` True)
+          (L.fileExists . T.pack) yyy `shouldReturn` True
 
-
-ioShouldBe :: (Show a, Eq a) => IO (a) -> a -> Expectation
-ioShouldBe a q = do
-    ioresult <- a
-    ioresult `shouldBe` q
-
--- iobe :: (Show a, Eq a) => IO (a) -> a -> IO Property
--- iobe a q = do
---     ioresult <- a
---     if | ioresult == q -> return $ property True
---        | otherwise     -> return $ property False
+nop :: Expectation
+nop = True `shouldBe` True
 
 withNoTempYYY action =
     bracket
@@ -88,12 +81,12 @@ withNoTempYYY action =
         action
         (\_ -> removeTempYYY)
 
--- removeTempYYY :: ActionWith () -> IO ()
+removeTempYYY :: IO ()
 removeTempYYY = do
   tmpDir <- getTemporaryDirectory
-  let yyy = tmpDir </> "yyy.txt"
-  r <- randomIO :: IO Int
-  putStrLn $ "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " <> (show r)
+  let yyy = tmpDir </> tempfilename
+  -- r <- randomIO :: IO Int
+  -- putStrLn $ "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " <> (show r)
 
   do
     e <- doesFileExist yyy
