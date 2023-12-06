@@ -84,4 +84,5 @@ test-suite createfile-test
     , random
     , text
     , transformers
+    , unix
   default-language: Haskell2010

@@ -67,6 +67,7 @@ tests:
       - createfile
       - hspec
       - random
+      - unix
     # - hspec-megaparsec
       - hspec-discover
       - transformers

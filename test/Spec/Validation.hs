@@ -10,7 +10,9 @@ import Test.QuickCheck
 import qualified Data.Text as T
 import System.IO
 import System.Random
+import System.Posix.Files
 import System.Directory
+-- import System.Directory.Internal
 import System.FilePath.Posix
 import Control.Monad.IO.Class
 import Control.Exception (bracket)
@@ -38,10 +40,6 @@ testArguments = do
         L.argumentCountIsEnough ["a"] `shouldBe` False
         L.argumentCountIsEnough ["a", "b"] `shouldBe` True
         L.argumentCountIsEnough ["a", "b", "c"] `shouldBe` True
-
-      it "existing output file should be readable and writable" $ do
-        pendingWith "not yet implemeted"
-        nop
 
 testFileExist = do
   describe "program argument validation" $ do
@@ -73,6 +71,18 @@ testFileExist = do
 
           (L.fileExists . T.pack) yyy >>= (`shouldBe` True)
           (L.fileExists . T.pack) yyy `shouldReturn` True
+          nop
+
+      around withNoTempYYY $ do
+        xit "existing output file should be readable and writable" $ do
+          tmpDir <- getTemporaryDirectory
+          let yyy = tmpDir </> tempfilename
+
+          writeFile yyy "some content"
+          setFileMode yyy 0o400
+
+          (L.fileExists . T.pack) yyy >>= (`shouldBe` True)
+          (L.hasPermission . T.pack) yyy `shouldReturn` False
           nop
 
 nop :: Expectation
