@@ -23,7 +23,6 @@ dependencies:
   - base >= 4.7 && < 5
   - directory
   - text
-  - mtl
   - filepath
 
 ghc-options:
@@ -37,6 +36,8 @@ ghc-options:
   - -Wpartial-fields
   - -Wredundant-constraints
   - -Wno-unused-imports
+  - -optl-static
+  - -optl-pthread
 
 library:
   source-dirs: src
@@ -44,7 +45,7 @@ library:
     - -O2
 
 executables:
-  createfile-exe:
+  createfile:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
