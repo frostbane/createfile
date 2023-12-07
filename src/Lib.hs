@@ -3,6 +3,7 @@ module Lib
     , pathExists
     , fileExists
     , hasPermission
+    , isFile
     ) where
 
 import Data.Text (Text)
@@ -31,4 +32,9 @@ hasPermission filename = do
     -- (putStrLn .show) perms
     let hasPerms = readable perms && writable perms
     return hasPerms
+
+isFile :: Text -> IO Bool
+isFile filename = do
+    isDir <- (doesPathExist . T.unpack) filename
+    return $ not isDir
 

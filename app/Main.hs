@@ -32,12 +32,14 @@ checkArgs args = do
     when (not enoughArgs) $ exit (-1) "[ERROR] Two or more arguments are required."
 
     let filename = head args
+    afile <- checkFile filename
     existingPath <- pathExists filename
     hasPerms <- checkPerms filename
 
     if | not enoughArgs   -> exit (-1) "[ERROR] Two or more arguments are required."
        | not existingPath -> exit (-2) "[ERROR] Output path does not exist."
-       | not hasPerms     -> exit (-3) "[ERROR] Unable to read/write output file."
+       | not afile        -> exit (-3) "[ERROR] Output file is a directory."
+       | not hasPerms     -> exit (-4) "[ERROR] Unable to read/write output file."
        | otherwise        -> return ()
 
   where
@@ -49,6 +51,9 @@ checkPerms filename = do
         return hasPerms
     else
         return True
+
+checkFile :: Text -> IO Bool
+checkFile = isFile
 
 exit :: Int -> String -> IO ()
 exit code msg = do
