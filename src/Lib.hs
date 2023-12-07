@@ -1,3 +1,6 @@
+{-# LANGUAGE MultiWayIf
+#-}
+
 module Lib
     ( argumentCountIsEnough
     , pathExists
@@ -10,6 +13,7 @@ import Data.Text (Text)
 import qualified Data.Text as T
 import System.Directory
 import System.FilePath
+import Control.Monad
 
 argumentCountIsEnough :: [Text] -> Bool
 argumentCountIsEnough args = count >= 2
@@ -35,6 +39,8 @@ hasPermission filename = do
 
 isFile :: Text -> IO Bool
 isFile filename = do
-    isDir <- (doesPathExist . T.unpack) filename
-    return $ not isDir
+    exists <- fileExists filename
+
+    if | exists -> return True
+       | otherwise -> (return . not) =<< (doesPathExist . T.unpack) filename
 
