@@ -12,6 +12,7 @@ module Main
 import Data.Text (Text)
 import qualified Data.Text as T
 import System.IO hiding (createFile)
+import Control.Monad
 
 import Fb.Arguments
 import Fb.Exit
@@ -26,15 +27,19 @@ main = do
 
 checkArgs :: [Text] ->  IO ()
 checkArgs args = do
+    let enoughArgs = argumentCountIsEnough args
+
+    when (not enoughArgs) $ exit (-1) "[ERROR] Two or more arguments are required."
+
     let filename = head args
-        enoughArgs = argumentCountIsEnough args
     existingPath <- pathExists filename
     hasPerms <- checkPerms filename
-    return ()
+
     if | not enoughArgs   -> exit (-1) "[ERROR] Two or more arguments are required."
        | not existingPath -> exit (-2) "[ERROR] Output path does not exist."
        | not hasPerms     -> exit (-3) "[ERROR] Unable to read/write output file."
        | otherwise        -> return ()
+
   where
 
 checkPerms filename = do
