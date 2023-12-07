@@ -34,7 +34,7 @@ library
       Paths_createfile
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-unused-imports -optl-static -optl-pthread -O2
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-unused-imports -static -optc-static -optl-static -optl-pthread -O2
   build-depends:
       base >=4.7 && <5
     , directory
@@ -50,7 +50,7 @@ executable createfile
       Paths_createfile
   hs-source-dirs:
       app
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-unused-imports -optl-static -optl-pthread -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-unused-imports -static -optc-static -optl-static -optl-pthread -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , createfile
@@ -69,7 +69,7 @@ test-suite createfile-test
       Paths_createfile
   hs-source-dirs:
       test
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-unused-imports -optl-static -optl-pthread -threaded -rtsopts -with-rtsopts=-N -Wno-missing-signatures
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-unused-imports -static -optc-static -optl-static -optl-pthread -threaded -rtsopts -with-rtsopts=-N -Wno-missing-signatures
   build-depends:
       QuickCheck
     , base >=4.7 && <5

@@ -36,6 +36,8 @@ ghc-options:
   - -Wpartial-fields
   - -Wredundant-constraints
   - -Wno-unused-imports
+  - -static
+  - -optc-static
   - -optl-static
   - -optl-pthread
 
