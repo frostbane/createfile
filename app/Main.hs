@@ -3,6 +3,7 @@
 #-}
 {-# OPTIONS_GHC
       -Wno-name-shadowing
+      -Wno-dodgy-imports
 #-}
 
 module Main
@@ -44,6 +45,7 @@ checkArgs args = do
 
   where
 
+checkPerms :: Text -> IO (Bool)
 checkPerms filename = do
     existingFile <- fileExists filename
     if existingFile then do
